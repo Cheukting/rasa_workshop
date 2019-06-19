@@ -11,7 +11,7 @@ Enter the directory:
 
 `cd rasa_workshop`
 
-(optional) Create a new [pyenv] (https://github.com/pyenv/pyenv-virtualenv) or [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) environment
+(optional) Create a new [pyenv](https://github.com/pyenv/pyenv-virtualenv) or [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) environment
 
 Install the requirements:
 
@@ -35,6 +35,6 @@ Rasa will create a list of files for you, but we mostly care about the following
 
 * `actions.py` : code for your custom actions
 * `config.yml` : configuration of your NLU and Core models
-* `data/nlu.md` :your NLU training data
+* `data/nlu.md` : your NLU training data
 * `data/stories.md` : your stories
 * `domain.yml` : your assistant’s domain
