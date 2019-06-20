@@ -5,6 +5,8 @@ In this workshop, we will try to build a chatbot that will ask for the user's co
 
 ## Install Rasa and set up the environment
 
+Open a terminal.
+
 Clone this repo form Github:
 
 `git clone (insert link) .`
@@ -54,3 +56,19 @@ Open `data/nlu.md` with text editor or IDE of your choice.
 We see in the default example that some examples for different intents are set up. In our use case, since we will be doing sentiment analysis using NLTK, we can delete the sections for `mood_great` and `mood_sad`. Feel free to add more example for the other intents, the more example the better is the understanding of the chatbot.
 
 After that, we have to setup the [NLP pipeline](http://rasa.com/docs/rasa/nlu/choosing-a-pipeline/), it can be done by editing `config.yml`. Here we will change the `supervised_embeddings` to `pretrained_embeddings_spacy` so we will be using pretrained Spacy embedding pipeline instead.
+
+Now we can train and test the NLU. In the terminal:
+
+`python -m spacy download en_core_web_md`
+
+`python -m spacy link en_core_web_md en`
+
+`rasa train nlu`
+
+The first 2 commends download and set up the Spacy model that we will be using. While the last commend tell rasa to train the NLU. The trained model should be saved under `models/`
+
+Now we can test the NLU that we trained:
+
+`rasa shell nlu`
+
+After loading (may take a while) you can type in messages and can see the prediction that the NLU gave. If you are not happy with the result, you can go back to add more examples to the `nlu.md` and train the NLU again (`rasa train nlu`). Repeat the training and testing until you are happy.
