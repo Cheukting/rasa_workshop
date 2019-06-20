@@ -52,3 +52,5 @@ For the entity, since we will be using the pretrained Spacy embedding pipeline !
 Open `data/nlu.md` with text editor or IDE of your choice.
 
 We see in the default example that some examples for different intents are set up. In our use case, since we will be doing sentiment analysis using NLTK, we can delete the sections for `mood_great` and `mood_sad`. Feel free to add more example for the other intents, the more example the better is the understanding of the chatbot.
+
+After that, we have to setup the [NLP pipeline](http://rasa.com/docs/rasa/nlu/choosing-a-pipeline/), it can be done by editing `config.yml`. Here we will change the `supervised_embeddings` to `pretrained_embeddings_spacy` so we will be using pretrained Spacy embedding pipeline instead.
