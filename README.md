@@ -1,5 +1,7 @@
 # Step Into the AI Era: Chatbots that know if you are angry
 
+In this workshop, we will try to build a chatbot that will ask for the user's contact details (compile to GDPR) and feedback of an event that they may have attended.
+
 
 ## Install Rasa and set up the environment
 
@@ -38,3 +40,15 @@ Rasa will create a list of files for you, but we mostly care about the following
 * `data/nlu.md` : your NLU training data
 * `data/stories.md` : your stories
 * `domain.yml` : your assistant’s domain
+
+We will explain what they are and how to set them up in this workshop.
+
+## Pipeline and NLU setup
+
+Now we will need to train the NLU, which is a natural language processing tool for intent classification and entity extraction.
+
+For the entity, since we will be using the pretrained Spacy embedding pipeline !!! the entity will be captured by Spacy. Thus in `data/nlu.md` we only need to provide the intent examples.
+
+Open `data/nlu.md` with text editor or IDE of your choice.
+
+We see in the default example that some examples for different intents are set up. In our use case, since we will be doing sentiment analysis using NLTK, we can delete the sections for `mood_great` and `mood_sad`. Feel free to add more example for the other intents, the more example the better is the understanding of the chatbot.
