@@ -49,13 +49,11 @@ We will explain what they are and how to set them up in this workshop.
 
 Now we will need to train the NLU, which is a natural language processing tool for intent classification and entity extraction.
 
-For the entity, since we will be using the pretrained Spacy embedding pipeline, the entity will be captured by Spacy. Thus in `data/nlu.md` we only need to provide the intent examples.
-
 Open `data/nlu.md` with text editor or IDE of your choice.
 
 We see in the default example that some examples for different intents are set up. In our use case, since we will be doing sentiment analysis using NLTK, we can delete the sections for `mood_great` and `mood_sad`. Feel free to add more example for the other intents, the more example the better is the understanding of the chatbot.
 
-Besides, since our bot will collect user's data, we need a few more intents: `self_intro`, `give_email`, `give_tel`
+Besides, since our bot will collect user's data, we need a few more intents for data capturing: `self_intro`, `give_email`, `give_tel`
 
 Here is some example, please feel free to add more:
 
@@ -73,7 +71,9 @@ Here is some example, please feel free to add more:
 - contact me at [07896234653](tel)
 ```
 
-Also, to help capture the email and the phone number, we also use [regex](https://www.rexegg.com/). Put this is `nlu.md` as well:
+In these examples, we can see that we are also giving example for the entity: `PERSON`, `email` and `tel`. `PERSON` is a entity provided by SpaCy. To help capture `email` and `tel`, we also use [regex](https://www.rexegg.com/).
+
+Put this is `nlu.md` as well:
 
 ```
 ## regex:email
@@ -85,7 +85,7 @@ Also, to help capture the email and the phone number, we also use [regex](https:
 
 If you are a regex expert, you can change it to a better expression.
 
-After that, we have to setup the [NLP pipeline](http://rasa.com/docs/rasa/nlu/choosing-a-pipeline/), it can be done by editing `config.yml`. Here we will change the `supervised_embeddings` to `pretrained_embeddings_spacy` so we will be using pretrained Spacy embedding pipeline instead.
+After that, we have to setup the [NLP pipeline](http://rasa.com/docs/rasa/nlu/choosing-a-pipeline/), it can be done by editing `config.yml`. Here we will change the `supervised_embeddings` to `pretrained_embeddings_spacy` so we will be using pretrained SpaCy embedding pipeline instead.
 
 ## Train and test NLU
 
