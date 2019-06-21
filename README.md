@@ -104,3 +104,68 @@ Now we can test the NLU that we trained:
 `rasa shell nlu`
 
 After loading (may take a while) you can type in messages and can see the prediction that the NLU gave. If you are not happy with the result, you can go back to add more examples to the `nlu.md` and train the NLU again (`rasa train nlu`). Repeat the training and testing until you are happy.
+
+*Congratulations, you have complete 1/3 of the workshop, feel free to take a 3 mins break*
+
+## Planning the conversation
+
+In this part, we have to write the plan for the flow of the conversation. It will be written in `data/stories.md`. The flow of the conversation will be broken in to 3 parts:
+
+1. greeting -> ask if user has attended event:
+
+    yes ->  (go to part 2.a)
+
+    no -> (go to part 2.b)
+
+2. a) ask for feedback -> ask if we can contact them
+
+   b) encourage them to go next year -> ask if we can contact them
+
+   yes ->  (go to part 3.a)
+
+   no -> (go to part 3.b)
+
+3. a) contact form and see you next year
+
+   b) see you next year
+
+If you open and edit `data/stories.md`, you can see that there are example stories already written. Except the `## say goodbye` which we are going to keep (it is for the user to end the conversation at anytime), we can delete the rest of it and write our own.
+
+The skeleton of the above 3 parts should be like this:
+
+```
+## greetings
+* greet
+  <something>
+> check ask experience
+
+## I have been to the event
+> check ask experience
+* affirm
+  <something>
+> check ask contact
+
+## Not talked to the representatives
+> check ask experience
+* deny
+  <something>
+> check ask contact
+
+## get contact info
+> check ask contact
+* affirm
+  <something>
+
+## do not contact me
+> check ask contact
+* deny
+  <something>
+```
+
+Here we will fill in `<something>` later but let me explain the use of checkpoints. For the line with `>` e.g. `> check ask experience` is a checkpoint which we can link the different part of the stories together. So instead giving example of stories which users answer the questions differently, we can use checkpoints to layout different paths.
+
+For the line with `*` it is when the chatbot recognize an intent. For example `* affirm` will be triggered when the NLU predicted an `affirm` intent.
+
+## Domain and templates
+
+We also need to tell the chatbot what action to take and what to answer then it reaches certain point of the conversation. This will be recorded in `domain.yml`, we also define the intents, entities and slots (information that we capture) in that file.
