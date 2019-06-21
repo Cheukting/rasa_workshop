@@ -169,3 +169,55 @@ For the line with `*` it is when the chatbot recognize an intent. For example `*
 ## Domain and templates
 
 We also need to tell the chatbot what action to take and what to answer then it reaches certain point of the conversation. This will be recorded in `domain.yml`, we also define the intents, entities and slots (information that we capture) in that file.
+
+#### Adding intents
+
+Remember what intents we have defined in `nlu.md`? Let's put it in `domain.yml`:
+
+```
+intents:
+- greet
+- goodbye
+- affirm
+- deny
+- self_intro
+- give_email
+- give_tel
+```
+
+#### Adding slots
+
+Before we define actions, we also want to define a few more stuff. Slots are the information that we wants to capture from the user. So far we want to capture their `name`, `email` and `tel` number:
+
+```
+slots:
+  name:
+    type: unfeaturized
+  email:
+    type: unfeaturized
+  tel:
+    type: unfeaturized
+```
+
+`unfeaturized` just mean that this information will not affect the flow of the conversation.
+
+#### Adding entities
+
+Similarly, add the entities that we defined in `nlu.md`:
+
+```
+entities:
+- PERSON
+- email
+- tel
+```
+
+#### Adding forms
+
+We will use action forms to capture user's contact information and feedback, it will be more clear when we write the actions for them. Let's define it here like this for now:
+
+```
+forms:
+  - contact_form
+  - experience_form
+```
