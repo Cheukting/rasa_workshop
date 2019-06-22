@@ -145,7 +145,7 @@ The skeleton of the above 3 parts should be like this:
   <something>
 > check ask contact
 
-## Not talked to the representatives
+## Not been to the event
 > check ask experience
 * deny
   <something>
@@ -303,18 +303,59 @@ templates:
 
 ```
 
-Please feel free to add more text for each `utter`
+Please feel free to add more or change the text for each `utter`
 
 We are done with `domain.yml` for now, let's go back to `stories.md`
 
 ## Finishing the stories
 
+Now we know what's available in the `domain`, let's fill in the `<something>` in the skeleton we had before:
 
+```
+## greetings
+* greet
+- utter_greet
+- utter_ask_experience
+> check ask experience
+
+## I have been to the event
+> check ask experience
+* affirm
+- utter_happy
+- experience_form
+- form{"name": "experience_form"}
+- form{"name": null}
+- utter_ask_contact
+> check ask contact
+
+## Not been to the event
+> check ask experience
+* deny
+- utter_encourage
+- utter_ask_contact
+> check ask contact
+
+## get contact info
+> check ask contact
+* affirm
+- utter_happy
+- contact_form
+- form{"name": "contact_form"}
+- form{"name": null}
+- utter_thanks
+
+## do not contact me
+> check ask contact
+* deny
+- utter_thanks
+```
+
+Notice that `- form{"name": "experience_form"}` we are calling to use the action form `experience_form`. After we are done, it will be reset to `null` to continue the conversation.
 
 ## Form actions
 
 
-## Train the test your Chatbots
+## Train and test your Chatbots
 
 
 *You have complete 2/3 of the workshop! Yes, there's more. Feel free to take a 3 mins break*
