@@ -221,3 +221,100 @@ forms:
   - contact_form
   - experience_form
 ```
+
+#### Adding actions
+
+We have 2 kind of action: One is `utter` that you see in the example, those are the dialog that the chatbot will 'say' to the users. The other is custom action. In this part, we will only add `utter` actions.
+
+```
+actions:
+- utter_greet
+- utter_happy
+- utter_goodbye
+- utter_thanks
+- utter_ask_contact
+- utter_ask_experience
+- utter_ask_name
+- utter_ask_email
+- utter_ask_tel
+- utter_ask_feedback
+- utter_unclear
+- utter_submit
+- utter_wrong_email
+- utter_wrong_tel
+- utter_encourage
+```
+
+These are the different `utter` of dialogs we would have, you will see them come into places when we complete the other parts of the projects, you may come back to change it later if you want.
+
+#### Adding templates
+
+For the above `utter` we need to fill in the templates of what text will be used. If there's more then one, it will be randomly choose to use one for that dialog. Try to put it more than one so there's variety in the bot's dialog.
+
+```
+templates:
+  utter_greet:
+  - text: "Hello! My name is Alex."
+
+  utter_happy:
+  - text: "Great!"
+  - text: "Awesome!"
+
+  utter_unclear:
+  - text: "Sorry, I don't understand."
+  - text: "I am not sure what you mean."
+
+  utter_goodbye:
+  - text: "Bye!"
+  - text: "Have a nice day!"
+
+  utter_thanks:
+  - text: "Thank you for chatting, please feel free to talk to me again."
+
+  utter_ask_contact:
+  - text: "Do you want to be contacted regarding EuroPython next year?"
+
+  utter_ask_experience:
+  - text: "Have you been to EuroPython this year?"
+
+  utter_ask_name:
+  - text: "What's your name?"
+
+  utter_ask_email:
+  - text: "What's your email address?"
+
+  utter_ask_tel:
+  - text: "What's your contact number?"
+
+  utter_ask_feedback:
+  - text: "So, how was your experience in EuroPython?"
+
+  utter_submit:
+  - text: "You information collected will not be shared to 3rd party."
+
+  utter_wrong_email:
+  - text: "This doesn't look like an email..."
+
+  utter_wrong_tel:
+  - text: "This doesn't look like a phone number..."
+
+  utter_encourage:
+  - text: "It's a shame, we would like to meet you there next year."
+
+```
+
+Please feel free to add more text for each `utter`
+
+We are done with `domain.yml` for now, let's go back to `stories.md`
+
+## Finishing the stories
+
+
+
+## Form actions
+
+
+## Train the test your Chatbots
+
+
+*You have complete 2/3 of the workshop! Yes, there's more. Feel free to take a 3 mins break*
