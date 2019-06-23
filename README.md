@@ -197,6 +197,8 @@ slots:
     type: unfeaturized
   tel:
     type: unfeaturized
+  feedback:
+      type: unfeaturized
 ```
 
 `unfeaturized` just mean that this information will not affect the flow of the conversation.
@@ -354,8 +356,70 @@ Notice that `- form{"name": "experience_form"}` we are calling to use the action
 
 ## Form actions
 
+Now come to the fun part, we will use action forms to collect the user's information. Before we do anything, first we need to add the `FormPolicy` to the configuration, goto `config.yml` and add:
+
+```
+  - name: FormPolicy
+```
+under `policies`. Also, we need to enable the aciton endpoint. Goto `endpoint.yml` and un0comment the following:
+
+```
+ action_endpoint:
+   url: "http://localhost:5055/webhook"
+```
+The action scripts will be hosted in a server setup by Rasa at port 5055.
+
+Then let's have a look at `actions.py`. From the examples in the default file, there are:
+
+```
+from typing import Any, Text, Dict, List
+
+from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+```
+which imports some object that is used to communicated with the Rasa framework. On top of that, we also need:
+
+```
+from rasa_sdk.forms import FormAction
+from rasa.core.constants import REQUESTED_SLOT
+from rasa_sdk import ActionExecutionRejection
+from rasa_sdk.events import SlotSet
+```
+
+which
 
 ## Train and test your Chatbots
 
+Once you are ready, it's time to train and test our chatbot (deep breath). So to train the bot using the settings that we have set up, in the terminal:
+
+```
+rasa train
+```
+
+when it is done, you can see that a new model is saved. Now let's try it out. First, make the server hosting the action script up and running:
+
+```
+rasa run actions
+```
+Now the server is running, let's open an other terminal and then type:
+```
+rasa shell
+```
+
+It will call Rasa to run the chatbot and now you can talk to it.
+
+#### Restart the action Server
+
+In you have made changes to your `actions.py` and want to start the server with the new script, you have to kill the server that is already running. Follow the following steps to kill the server:
+
+1. find the `PID` of the process:
+```
+sudo lsof -i tcp:5055
+```
+2. kill the process:
+```
+kill -9 <PID>
+```
+fill in the `<PID>` with the  `PID` you found in step 1.
 
 *You have complete 2/3 of the workshop! Yes, there's more. Feel free to take a 3 mins break*
