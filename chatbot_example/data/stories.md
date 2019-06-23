@@ -1,26 +1,39 @@
-## happy path
+## greetings
 * greet
-  - utter_greet
-* mood_great
-  - utter_happy
+- utter_greet
+- utter_ask_experience
+> check ask experience
 
-## sad path 1
-* greet
-  - utter_greet
-* mood_unhappy
-  - utter_cheer_up
-  - utter_did_that_help
+## I have been to the event
+> check ask experience
 * affirm
-  - utter_happy
+- utter_happy
+- experience_form
+- form{"name": "experience_form"}
+- form{"name": null}
+- utter_ask_contact
+> check ask contact
 
-## sad path 2
-* greet
-  - utter_greet
-* mood_unhappy
-  - utter_cheer_up
-  - utter_did_that_help
+## Not been to the event
+> check ask experience
 * deny
-  - utter_goodbye
+- utter_encourage
+- utter_ask_contact
+> check ask contact
+
+## get contact info
+> check ask contact
+* affirm
+- utter_happy
+- contact_form
+- form{"name": "contact_form"}
+- form{"name": null}
+- utter_thanks
+
+## do not contact me
+> check ask contact
+* deny
+- utter_thanks
 
 ## say goodbye
 * goodbye
