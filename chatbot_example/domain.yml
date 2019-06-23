@@ -1,31 +1,91 @@
 intents:
-  - greet
-  - goodbye
-  - affirm
-  - deny
-  - mood_great
-  - mood_unhappy
+- greet
+- goodbye
+- affirm
+- deny
+- self_intro
+- give_email
+- give_tel
+
+slots:
+  name:
+    type: unfeaturized
+  email:
+    type: unfeaturized
+  tel:
+    type: unfeaturized
+
+entities:
+- PERSON
+- email
+- tel
+
+forms:
+  - contact_form
+  - experience_form
 
 actions:
 - utter_greet
-- utter_cheer_up
-- utter_did_that_help
 - utter_happy
 - utter_goodbye
+- utter_thanks
+- utter_ask_contact
+- utter_ask_experience
+- utter_ask_name
+- utter_ask_email
+- utter_ask_tel
+- utter_ask_feedback
+- utter_unclear
+- utter_submit
+- utter_wrong_email
+- utter_wrong_tel
+- utter_encourage
 
 templates:
   utter_greet:
-  - text: "Hey! How are you?"
-
-  utter_cheer_up:
-  - text: "Here is something to cheer you up:"
-    image: "https://i.imgur.com/nGF1K8f.jpg"
-
-  utter_did_that_help:
-  - text: "Did that help you?"
+  - text: "Hello! My name is Alex."
 
   utter_happy:
-  - text: "Great carry on!"
+  - text: "Great!"
+  - text: "Awesome!"
+
+  utter_unclear:
+  - text: "Sorry, I don't understand."
+  - text: "I am not sure what you mean."
 
   utter_goodbye:
-  - text: "Bye"
+  - text: "Bye!"
+  - text: "Have a nice day!"
+
+  utter_thanks:
+  - text: "Thank you for chatting, please feel free to talk to me again."
+
+  utter_ask_contact:
+  - text: "Do you want to be contacted regarding EuroPython next year?"
+
+  utter_ask_experience:
+  - text: "Have you been to EuroPython this year?"
+
+  utter_ask_name:
+  - text: "What's your name?"
+
+  utter_ask_email:
+  - text: "What's your email address?"
+
+  utter_ask_tel:
+  - text: "What's your contact number?"
+
+  utter_ask_feedback:
+  - text: "So, how was your experience in EuroPython?"
+
+  utter_submit:
+  - text: "You information collected will not be shared to 3rd party."
+
+  utter_wrong_email:
+  - text: "This doesn't look like an email..."
+
+  utter_wrong_tel:
+  - text: "This doesn't look like a phone number..."
+
+  utter_encourage:
+  - text: "It's a shame, we would like to meet you there next year."
