@@ -381,9 +381,6 @@ which imports some object that is used to communicated with the Rasa framework. 
 
 ```
 from rasa_sdk.forms import FormAction
-from rasa.core.constants import REQUESTED_SLOT
-from rasa_sdk import ActionExecutionRejection
-from rasa_sdk.events import SlotSet
 ```
 
 which
@@ -403,9 +400,8 @@ rasa run actions
 ```
 Now the server is running, let's open an other terminal and then type:
 ```
-rasa shell
+rasa shell --endpoint endpoint.yml
 ```
-
 It will call Rasa to run the chatbot and now you can talk to it.
 
 #### Restart the action Server
