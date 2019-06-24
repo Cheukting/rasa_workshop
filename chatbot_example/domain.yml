@@ -16,6 +16,10 @@ slots:
     type: unfeaturized
   feedback:
     type: unfeaturized
+  feedback_class:
+    type: unfeaturized
+  feedback_score:
+    type: unfeaturized
 
 entities:
 - PERSON

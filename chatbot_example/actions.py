@@ -35,6 +35,9 @@ from rasa_sdk.forms import FormAction
 
 import re
 
+import nltk
+nltk.download('vader_lexicon')
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 class ExperienceForm(FormAction):
     """Form action to capture user experience"""
@@ -59,6 +62,19 @@ class ExperienceForm(FormAction):
            after all required slots are filled
            basically it generate sentiment analysis
            using the user's feedback"""
+
+        sid = SentimentIntensityAnalyzer()
+
+        all_slots = tracker.slots
+        for slot, value in all_slots.items():
+            if slot in self.required_slots(tracker):
+                res = sid.polarity_scores(value)
+                score = res.pop('compound', None)
+                classi, confidence = max(res.items(), key=lambda x: x[1])
+                # classification of the feedback, could be pos, neg, or neu
+                all_slots[slot+'_class'] = classi
+                # sentiment score of the feedback, range form -1 to 1
+                all_slots[slot+'_score'] = score
 
         return []
 

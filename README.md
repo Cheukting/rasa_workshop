@@ -550,7 +550,7 @@ rasa shell --endpoint endpoint.yml
 ```
 It will call Rasa to run the chatbot with the endpoint and now you can talk to it.
 
-#### Restart the action Server
+#### Restart the action server
 
 In you have made changes to your `actions.py` and want to start the server with the new script, you have to kill the server that is already running. Follow the following steps to kill the server:
 
@@ -565,3 +565,45 @@ kill -9 <PID>
 fill in the `<PID>` with the  `PID` you found in step 1.
 
 *You have complete 2/3 of the workshop! Yes, there's more. Feel free to take a 3 mins break*
+
+## Using NLTK to analyse the sentiment
+
+Here comes the fun part, we will use NLTK, a suite of libraries for natural language processing, to analyse the sentiment of the `feedback` so we know if it's a positive feedback or a negative one.
+
+Before we add code in the action script, let's add 2 more slots in our `domain.yml`:
+
+```
+feedback_class:
+  type: unfeaturized
+feedback_score:
+  type: unfeaturized
+```
+This 2 slots will store the result of the analysis. Then head to `actions.py`. First we have to import and download the resources in NLTK:
+```
+import nltk
+nltk.download('vader_lexicon')
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+```
+This is a built in sentiment analyzer in NLTK and it's super easy to use. Then we add the following to the `submit` method of `ExperienceForm`:
+
+```
+sid = SentimentIntensityAnalyzer()
+
+all_slots = tracker.slots
+for slot, value in all_slots.items():
+    if slot in self.required_slots(tracker):
+        res = sid.polarity_scores(value)
+        score = res.pop('compound', None)
+        classi, confidence = max(res.items(), key=lambda x: x[1])
+        # classification of the feedback, could be pos, neg, or neu
+        all_slots[slot+'_class'] = classi
+        # sentiment score of the feedback, range form -1 to 1
+        all_slots[slot+'_score'] = score
+```
+Here we use the analyzer to get the classification fo the feedback and the score of it and stall them in the new slots.
+
+Now you can restart the action server and test the chatbot again (remember to retrain it as we have change the `domain.yml`) Make sure the chatbot works as before. We cannot see the difference in the Rasa shell as the slots are not shown anywhere in the conversation. In the next part, we will generate a report using a simple web framework.
+
+## Generate user report
+
+To display the information that we collected from the user, we have to generate a report. 
