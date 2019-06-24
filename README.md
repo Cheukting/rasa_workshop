@@ -9,7 +9,7 @@ Open a terminal.
 
 Clone this repo form Github:
 
-`git clone (insert link) .`
+`git clone https://github.com/Cheukting/rasa_workshop .`
 
 Enter the directory:
 
@@ -220,8 +220,8 @@ We will use action forms to capture user's contact information and feedback, it 
 
 ```
 forms:
-  - contact_form
   - experience_form
+  - contact_form
 ```
 
 #### Adding actions
@@ -383,7 +383,153 @@ which imports some object that is used to communicated with the Rasa framework. 
 from rasa_sdk.forms import FormAction
 ```
 
-which
+which allows us to write custom form action classes (classes inherit from `FormAction`).
+
+#### ExperienceForm
+
+First we define the `experience_form`:
+
+```
+class ExperienceForm(FormAction):
+    """Form action to capture user experience"""
+
+    def name(self):
+        # type: () -> Text
+        """Unique identifier of the form"""
+        return "experience_form"
+
+    @staticmethod
+    def required_slots(tracker):
+        # type: () -> List[Text]
+        """A list of required slots that the form has to fill
+           this form collect the feedback of the user experience"""
+        return ["feedback"]
+
+    def submit(self, dispatcher, tracker, domain):
+        # type: (CollectingDispatcher, Tracker, Dict[Text, Any]) -> List[Dict]
+        """Define what the form has to do
+           after all required slots are filled
+           basically it generate sentiment analysis
+           using the user's feedback"""
+        return []
+
+    def slot_mappings(self):
+        # type: () -> Dict[Text: Union[Dict, List[Dict]]]
+        """A dictionary to map required slots to
+            - an extracted entity
+            - intent: value pairs
+            - a whole message
+            or a list of them, where a first match will be picked"""
+        return {"feedback": [self.from_text()]}
+
+```
+
+It is very simple, it just collect the text that was input by the user in the `feedback` slot. When the form is triggered, the action `utter_ask_feedback` is activated and the user input after that will be captured. Have a look at the doc string of each methods and make sure you understand what each function does, we will use them again in the more complicated `contact_form`.
+
+#### ContactForm
+
+Similarly, we define `contact_form`:
+
+```
+class ContactForm(FormAction):
+    """Form action to capture contact details"""
+
+    def name(self):
+        # type: () -> Text
+        """Unique identifier of the form"""
+        return "contact_form"
+
+    @staticmethod
+    def required_slots(tracker):
+        # type: () -> List[Text]
+        """A list of required slots that the form has to fill"""
+        return ["name", "email", "tel"]
+
+    def submit(self, dispatcher, tracker, domain):
+        # type: (CollectingDispatcher, Tracker, Dict[Text, Any]) -> List[Dict]
+        """Define what the form has to do
+           after all required slots are filled"""
+
+        dispatcher.utter_template('utter_submit', tracker)
+        return []
+
+    def slot_mappings(self):
+        # type: () -> Dict[Text: Union[Dict, List[Dict]]]
+        """A dictionary to map required slots to
+            - an extracted entity
+            - intent: value pairs
+            - a whole message
+            or a list of them, where a first match will be picked"""
+
+        return {"name": [self.from_entity(entity="PERSON",
+                                          intent="self_intro"),
+                         self.from_text()],
+                "email": [self.from_entity(entity="email"),
+                          self.from_text()],
+                "tel": [self.from_entity(entity="tel"),
+                        self.from_text()]}
+
+```
+This time the slot mapping is more complicated, using `from_entity` we can specify the slot to be fill with a certain recognised entity / intent in stead of free text. However, we put `from_text` in the list after `from_entity` as a fail save catching the information if the user's input is not recognisable.
+
+#### Validating slots
+
+For the `email` and `tel` the user input, we want to validate them. so in the `ContactForm` class, we added more methods:
+
+```
+@staticmethod
+def is_email(string: Text) -> bool:
+    """Check if a string is valid email"""
+    pattern = re.compile("[\w-]+@([\w-]+\.)+[\w-]+")
+    return pattern.match(string)
+
+@staticmethod
+def is_tel(string: Text) -> bool:
+    """Check if a string is valid email"""
+    pattern_uk = re.compile("(0)([0-9][\s]*){10}")
+    pattern_world = re.compile("^(00|\+)[\s]*[1-9]{1}([0-9][\s]*){9,16}$")
+    return pattern_uk.match(string) or pattern_world.match(string)
+
+def validate_email(
+     self,
+        value: Text,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> Optional[Text]:
+    if self.is_email(value):
+        return {"email": value}
+    else:
+        dispatcher.utter_template('utter_wrong_email', tracker)
+        # validation failed, set this slot to None, meaning the
+        # user will be asked for the slot again
+        return {"email": None}
+
+def validate_tel(
+     self,
+        value: Text,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> Optional[Text]:
+    if self.is_tel(value):
+        return {"tel": value}
+    else:
+        dispatcher.utter_template('utter_wrong_tel', tracker)
+        # validation failed, set this slot to None, meaning the
+        # user will be asked for the slot again
+        return {"tel": None}
+```
+
+Notice we have used `re` module, so we have to import it:
+```
+import re
+```
+Also, we have use one more `typing`: `Optional`. We have to import it as well:
+```
+from typing import Any, Text, Dict, List, Optional
+```
+Here we have defined 2 helper methods: `is_email` and `is_tel` which will use Regex to check if the input matches an email format and phone number format. After that , we also set up 2 validate method for each of them. If the format is not does not match what we expected, we will reset the slot to `None` and use the `utter` to ask again.
 
 ## Train and test your Chatbots
 
@@ -402,7 +548,7 @@ Now the server is running, let's open an other terminal and then type:
 ```
 rasa shell --endpoint endpoint.yml
 ```
-It will call Rasa to run the chatbot and now you can talk to it.
+It will call Rasa to run the chatbot with the endpoint and now you can talk to it.
 
 #### Restart the action Server
 

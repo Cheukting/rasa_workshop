@@ -23,8 +23,8 @@ entities:
 - tel
 
 forms:
-  - contact_form
   - experience_form
+  - contact_form
 
 actions:
 - utter_greet
