@@ -240,7 +240,6 @@ actions:
 - utter_ask_email
 - utter_ask_tel
 - utter_ask_feedback
-- utter_unclear
 - utter_submit
 - utter_wrong_email
 - utter_wrong_tel
@@ -261,10 +260,6 @@ templates:
   utter_happy:
   - text: "Great!"
   - text: "Awesome!"
-
-  utter_unclear:
-  - text: "Sorry, I don't understand."
-  - text: "I am not sure what you mean."
 
   utter_goodbye:
   - text: "Bye!"
@@ -707,3 +702,27 @@ For this code it will call the method `run` when triggered and gather the slots 
 Now restart the action server and re-train and test the chatbot.
 
 ## Fallback dialog
+
+So far everything works fine if the user has been good. What if the user give an unexpected answer and the NLU failed to determine what to do. Here we use a fallback action to prompt the user to try again. First we have to enable `FallbackPolicy`, in `config.yml` under `policies`, add:
+```
+- name: "FallbackPolicy"
+  nlu_threshold: 0.4
+  core_threshold: 0.3
+  fallback_action_name: "action_default_fallback"
+```
+`action_default_fallback` is a default action in Rasa Core which sends the `utter_default` template message to the user. So in `domain.yml`, add `- utter_default` under `actions` and `templates`:
+```
+utter_default:
+- text: "Sorry, I don't understand."
+- text: "I am not sure what you mean."
+```
+Now you can re-train and test the chatbot. Make sure you try to be a naughty user.
+
+*Congratulations! You have complicated the Rasa workshop... for now. Please feel free to integrate more functions to it, experiment and have fun.*
+
+## What's beyond
+
+For more things you can do with Rasa, please refer to the [Rasa documentation](http://rasa.com/docs/rasa/).
+
+
+We are always looking for more contents, so if you have a good idea, please feel free to contribute.

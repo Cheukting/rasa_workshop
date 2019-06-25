@@ -41,7 +41,7 @@ actions:
 - utter_ask_email
 - utter_ask_tel
 - utter_ask_feedback
-- utter_unclear
+- utter_default
 - utter_submit
 - utter_wrong_email
 - utter_wrong_tel
@@ -56,7 +56,7 @@ templates:
   - text: "Great!"
   - text: "Awesome!"
 
-  utter_unclear:
+  utter_default:
   - text: "Sorry, I don't understand."
   - text: "I am not sure what you mean."
 
