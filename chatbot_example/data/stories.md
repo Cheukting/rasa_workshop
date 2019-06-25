@@ -29,11 +29,13 @@
 - form{"name": "contact_form"}
 - form{"name": null}
 - utter_thanks
+- action_show_result
 
 ## do not contact me
 > check ask contact
 * deny
 - utter_thanks
+- action_show_result
 
 ## say goodbye
 * goodbye

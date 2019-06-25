@@ -46,6 +46,7 @@ actions:
 - utter_wrong_email
 - utter_wrong_tel
 - utter_encourage
+- action_show_result
 
 templates:
   utter_greet:

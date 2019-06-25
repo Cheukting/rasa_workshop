@@ -600,10 +600,110 @@ for slot, value in all_slots.items():
         # sentiment score of the feedback, range form -1 to 1
         all_slots[slot+'_score'] = score
 ```
-Here we use the analyzer to get the classification fo the feedback and the score of it and stall them in the new slots.
+and return the new values of the slots:
+```
+return [SlotSet(slot, value) for slot, value in all_slots.items()]
+```
+Here we use the analyzer to get the classification fo the feedback and the score of it and stall them in the new slots. Note that we have use a event in Rasa called `SlotSet`, make sure we import it at the beginning:
+```
+from rasa_sdk.events import SlotSet
+```
 
 Now you can restart the action server and test the chatbot again (remember to retrain it as we have change the `domain.yml`) Make sure the chatbot works as before. We cannot see the difference in the Rasa shell as the slots are not shown anywhere in the conversation. In the next part, we will generate a report using a simple web framework.
 
 ## Generate user report
 
-To display the information that we collected from the user, we have to generate a report. 
+To display the information that we collected from the user, we have to generate a report. You can use any web framework of your choice but here we use a simple lightweight framework called [CherryPy](https://docs.cherrypy.org/en/latest/index.html)
+
+
+#### Set up CherryPy server
+Since we are not teaching web development here, we will just tell you how to set it up with CherryPy. First open a new directory and go there. In the terminal you can:
+```
+mkdir report
+cd report
+```
+create 3 files as follow:
+
+1. result.css
+```
+body {
+    padding-left: 15px;
+}
+```
+
+2. result.html
+```
+<html>
+    <head>
+    <link rel="stylesheet" href="result.css">
+    </head>
+    <body>
+        <h1>{name} survey result</h1>
+        {result}
+    </body>
+</html>
+```
+
+3. result.py
+```
+import cherrypy
+import os
+class SurveyResult(object):
+    @cherrypy.expose
+    def index(self, name=None, result=None):
+        return open("result.html").read().format(name=name, result=result)
+conf={'/result.css':
+                    { 'tools.staticfile.on':True,
+                      'tools.staticfile.filename': os.path.abspath("./result.css"),
+                    }
+      }
+if __name__ == '__main__':
+    cherrypy.quickstart(SurveyResult(), config=conf)
+```
+Then in the terminal:
+```
+python result.py
+```
+It will set up a web app running at port 8080. Just like the action scrip server, we will leave it there and open a new terminal.
+
+#### Action for showing report
+
+After setting up the report server, we have to add the `Action` in the action script to send the request when the conversation is ended, but before that, we will need to add `- action_show_result` under `actions` in `domain.yml` and at the end of the `## get contact info` and `## do not contact me` stories in `data/stories.md`.
+
+In `actions.py` add the following:
+```
+class ActionShowResult(Action):
+    """open the html showing the result of the user survey"""
+    def name(self):
+        # type: () -> Text
+        return "action_show_result"
+
+    def run(self, dispatcher, tracker, domain):
+        # type: (CollectingDispatcher, Tracker, Dict[Text, Any]) -> List[Dict[Text, Any]]
+
+        result = tracker.slots
+        name = result['name']
+        if name is None:
+            name = 'Anonymous'
+        else:
+            name = name + "'s"
+        http_result =""""""
+        for key, value in result.items():
+            if key != 'requested_slot':
+                http_result += """<p>{}: {}</p>""".format(key, value)
+
+        # url of the server set up by result.py
+        url = 'http://localhost:8080/?name={}&result={}'.format(name, http_result)
+        webbrowser.open(url)
+
+        return []
+```
+We have to also:
+```
+import webbrowser
+```
+For this code it will call the method `run` when triggered and gather the slots and send them with the request to the report server.
+
+Now restart the action server and re-train and test the chatbot.
+
+## Fallback dialog
