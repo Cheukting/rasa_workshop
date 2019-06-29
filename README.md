@@ -9,7 +9,7 @@ Open a terminal.
 
 Clone this repo form Github:
 
-`git clone https://github.com/Cheukting/rasa_workshop .`
+`git clone https://github.com/Cheukting/rasa_workshop.git`
 
 Enter the directory:
 
