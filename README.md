@@ -51,7 +51,7 @@ Now we will need to train the NLU, which is a natural language processing tool f
 
 Open `data/nlu.md` with text editor or IDE of your choice.
 
-We see in the default example that some examples for different intents are set up. In our use case, since we will be doing sentiment analysis using NLTK, we can delete the sections for `mood_great` and `mood_sad`. Feel free to add more example for the other intents, the more example the better is the understanding of the chatbot.
+We see in the default example that some examples for different intents are set up. In our use case, since we will be doing sentiment analysis using NLTK, we can delete the sections for `mood_great` and `mood_unhappy`. Feel free to add more example for the other intents, the more example the better is the understanding of the chatbot.
 
 Besides, since our bot will collect user's data, we need a few more intents for data capturing: `self_intro`, `give_email`, `give_tel`
 
