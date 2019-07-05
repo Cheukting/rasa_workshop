@@ -1,13 +1,13 @@
 # Step Into the AI Era: Chatbots that know if you are angry
 
-In this workshop, we will try to build a chatbot that will ask for the user's contact details (compile to GDPR) and feedback of an event that they may have attended.
+In this workshop, we will build a chatbot that will ask for an individual's contact details (compliant to GDPR) and for feedback for an event that they may have attended.
 
 
 ## Install Rasa and set up the environment
 
 Open a terminal.
 
-Clone this repo form Github:
+Clone this repo from Github:
 
 `git clone https://github.com/Cheukting/rasa_workshop.git`
 
@@ -15,7 +15,7 @@ Enter the directory:
 
 `cd rasa_workshop`
 
-(optional) Create a new [pyenv](https://github.com/pyenv/pyenv-virtualenv) or [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) environment
+(optional) Create a new [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) or [pyenv](https://github.com/pyenv/pyenv-virtualenv) environment
 
 Install the requirements:
 
@@ -47,15 +47,15 @@ We will explain what they are and how to set them up in this workshop.
 
 ## Pipeline and NLU setup
 
-Now we will need to train the NLU, which is a natural language processing tool for intent classification and entity extraction.
+First we will need to train the NLU, which is a natural language processing tool for intent classification and entity extraction.
 
 Open `data/nlu.md` with text editor or IDE of your choice.
 
-We see in the default example that some examples for different intents are set up. In our use case, since we will be doing sentiment analysis using NLTK, we can delete the sections for `mood_great` and `mood_unhappy`. Feel free to add more example for the other intents, the more example the better is the understanding of the chatbot.
+We see in the default example that some examples for different intents are set up. In our use case, since we will be doing sentiment analysis using NLTK, we can delete the sections for `mood_great` and `mood_unhappy`. Feel free to add more examples for the other intents: the more examples, the better the understanding of the chatbot.
 
-Besides, since our bot will collect user's data, we need a few more intents for data capturing: `self_intro`, `give_email`, `give_tel`
+Since our bot will collect user's data, we need more intents for data capturing: `self_intro`, `give_email`, `give_tel`.
 
-Here is some example, please feel free to add more:
+Here are some examples, please feel free to add more:
 
 ```
 ## intent:self_intro
@@ -73,7 +73,7 @@ Here is some example, please feel free to add more:
 
 In these examples, we can see that we are also giving example for the entity: `PERSON`, `email` and `tel`. `PERSON` is a entity provided by SpaCy. To help capture `email` and `tel`, we also use [regex](https://www.rexegg.com/).
 
-Put this is `nlu.md` as well:
+Put this in `nlu.md` as well:
 
 ```
 ## regex:email
@@ -109,7 +109,7 @@ After loading (may take a while) you can type in messages and can see the predic
 
 ## Planning the conversation
 
-In this part, we have to write the plan for the flow of the conversation. It will be written in `data/stories.md`. The flow of the conversation will be broken in to 3 parts:
+In this part, we have to write the plan for the flow of the conversation. It will be written in `data/stories.md`. The flow of the conversation will be broken into 3 parts:
 
 1. greeting -> ask if user has attended event:
 
@@ -725,4 +725,4 @@ Now you can re-train and test the chatbot. Make sure you try to be a naughty use
 For more things you can do with Rasa, please refer to the [Rasa documentation](http://rasa.com/docs/rasa/).
 
 
-We are always looking for more contents, so if you have a good idea, please feel free to contribute.
+We are always looking for more content, so if you have a good idea, please feel free to contribute.
