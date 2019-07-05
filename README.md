@@ -49,13 +49,15 @@ We will explain what they are and how to set them up in this workshop.
 
 First we will need to train the NLU, which is a natural language processing tool for intent classification and entity extraction.
 
-Open `data/nlu.md` with text editor or IDE of your choice.
+Open `data/nlu.md` with the text editor or IDE of your choice.
 
-We see in the default example that some examples for different intents are set up. In our use case, since we will be doing sentiment analysis using NLTK, we can delete the sections for `mood_great` and `mood_unhappy`. Feel free to add more examples for the other intents: the more examples, the better the understanding of the chatbot.
+In the file, we see that some examples for different intents are already supplied. For our use case, since we will be doing sentiment analysis using [Natural Language Toolkit (NLTK)](https://www.nltk.org/), we can delete the sections for `mood_great` and `mood_unhappy`.
 
-Since our bot will collect user's data, we need more intents for data capturing: `self_intro`, `give_email`, `give_tel`.
+Feel free to add more examples for the other intents: the more examples, the better the understanding of the chatbot.
 
-Here are some examples, please feel free to add more:
+Collecting user's data is one of the goals of our bot. To enable this, we need to add more intents for data capturing, such as: `self_intro`, `give_email`, `give_tel`.
+
+Here are some examples for the additional intents, please feel free to add more:
 
 ```
 ## intent:self_intro
@@ -71,7 +73,7 @@ Here are some examples, please feel free to add more:
 - contact me at [07896234653](tel)
 ```
 
-In these examples, we can see that we are also giving example for the entity: `PERSON`, `email` and `tel`. `PERSON` is a entity provided by SpaCy. To help capture `email` and `tel`, we also use [regex](https://www.rexegg.com/).
+We can see that these examples have a slightly different structure than before: each has a bracketed term that provides an example for the entity which follows in parentheses: `PERSON`, `email` and `tel`. `PERSON` is a entity provided by SpaCy. To help capture `email` and `tel`, we also use [regex](https://www.rexegg.com/).
 
 Put this in `nlu.md` as well:
 
@@ -83,33 +85,35 @@ Put this in `nlu.md` as well:
 - (0)([0-9][\s]*){10}
 ```
 
-If you are a regex expert, you can change it to a better expression.
+If you are a regex expert, you can change it to a better expression. 😉
 
-After that, we have to setup the [NLP pipeline](http://rasa.com/docs/rasa/nlu/choosing-a-pipeline/), it can be done by editing `config.yml`. Here we will change the `supervised_embeddings` to `pretrained_embeddings_spacy` so we will be using pretrained SpaCy embedding pipeline instead.
+After that, we have to setup the [NLP pipeline](http://rasa.com/docs/rasa/nlu/choosing-a-pipeline/), it can be done by editing `config.yml`. Here we will change the `supervised_embeddings` to `pretrained_embeddings_spacy` so that we use the pretrained SpaCy embedding pipeline.
 
 ## Train and test NLU
 
-Now we can train and test the NLU. In the terminal:
+The following 2 commands download and set up the Spacy model that we will be using. In the terminal:
 
 `python -m spacy download en_core_web_md`
 
 `python -m spacy link en_core_web_md en`
 
+Then we tell rasa to train the NLU.
+
 `rasa train nlu`
 
-The first 2 commends download and set up the Spacy model that we will be using. While the last commend tell rasa to train the NLU. The trained model should be saved under `models/`
+The trained model should be saved under `models/`.
 
-Now we can test the NLU that we trained:
+ Now we can test the NLU model that we trained:
 
 `rasa shell nlu`
 
-After loading (may take a while) you can type in messages and can see the prediction that the NLU gave. If you are not happy with the result, you can go back to add more examples to the `nlu.md` and train the NLU again (`rasa train nlu`). Repeat the training and testing until you are happy.
+After loading (may take a moment) you can type in messages and see the prediction that the NLU  returns. If you are not happy with the result, you can go back and add more examples to the `nlu.md` and then train the NLU again (`rasa train nlu`). Repeat the training and testing until you are happy.
 
 *Congratulations, you have complete 1/3 of the workshop, feel free to take a 3 mins break*
 
 ## Planning the conversation
 
-In this part, we have to write the plan for the flow of the conversation. It will be written in `data/stories.md`. The flow of the conversation will be broken into 3 parts:
+In this part, we will write the plan for the flow of the conversation. It will be written in `data/stories.md`. The flow of the conversation will be broken into 3 parts:
 
 1. greeting -> ask if user has attended event:
 
