@@ -15,7 +15,7 @@ Enter the directory:
 
 `cd rasa_workshop`
 
-(optional) Create a new [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) or [pyenv](https://github.com/pyenv/pyenv-virtualenv) environment
+(optional) Create a new [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) or [pyenv](https://github.com/pyenv/pyenv-virtualenv) environment.
 
 Install the requirements:
 
@@ -45,15 +45,17 @@ Rasa will create a list of files for you, but we mostly care about the following
 
 We will explain what they are and how to set them up in this workshop.
 
-## Pipeline and NLU setup
+##  NLU and Pipeline setup
 
 First we will need to train the NLU, which is a natural language processing tool for intent classification and entity extraction.
 
 Open `data/nlu.md` with the text editor or IDE of your choice.
 
-In the file, we see that some examples for different intents are already supplied. For our use case, since we will be doing sentiment analysis using [Natural Language Toolkit (NLTK)](https://www.nltk.org/), we can delete the sections for `mood_great` and `mood_unhappy`.
+In the file, we see that some examples for different intents are already supplied. The intents are defined by lines starting with `##`. Intents are a way to group messages with the same meaning, and example messages are provided below each intent. NLU's job will be to predict the correct intent for each new message your user sends your chatbot.
 
-Feel free to add more examples for the other intents: the more examples, the better the understanding of the chatbot.
+For our use case, since we will be doing sentiment analysis using [Natural Language Toolkit (NLTK)](https://www.nltk.org/), we can delete the sections for `mood_great` and `mood_unhappy`.
+
+Feel free to add more examples for the other intents: the more examples, the better the understanding of NLU and your chatbot.
 
 Collecting user's data is one of the goals of our bot. To enable this, we need to add more intents for data capturing, such as: `self_intro`, `give_email`, `give_tel`.
 
@@ -73,9 +75,9 @@ Here are some examples for the additional intents, please feel free to add more:
 - contact me at [07896234653](tel)
 ```
 
-We can see that these examples have a slightly different structure than before: each has a bracketed term that provides an example for the entity which follows in parentheses: `PERSON`, `email` and `tel`. `PERSON` is a entity provided by SpaCy. To help capture `email` and `tel`, we also use [regex](https://www.rexegg.com/).
+We can see that these examples have a slightly different structure than before: each has a bracketed term that provides an example for the entity which follows in parentheses: `PERSON`, `email` and `tel`. `PERSON` is a entity provided by SpaCy.
 
-Put this in `nlu.md` as well:
+To help capture `email` and `tel`, we will also use [regex](https://www.rexegg.com/). To do so, put this in `nlu.md` as well:
 
 ```
 ## regex:email
@@ -87,7 +89,9 @@ Put this in `nlu.md` as well:
 
 If you are a regex expert, you can change it to a better expression. 😉
 
-After that, we have to setup the [NLP pipeline](http://rasa.com/docs/rasa/nlu/choosing-a-pipeline/), it can be done by editing `config.yml`. Here we will change the `supervised_embeddings` to `pretrained_embeddings_spacy` so that we use the pretrained SpaCy embedding pipeline.
+After that, we have to setup the [NLP pipeline](http://rasa.com/docs/rasa/nlu/choosing-a-pipeline/), which can be done by editing `config.yml`. This configuration file defines the NLU and Core components that your model will use.  
+
+In `config.yml` change the `supervised_embeddings` to `pretrained_embeddings_spacy` so that we use the pretrained SpaCy embedding pipeline. You can find out more about NLU pipelines [here](https://rasa.com/docs/rasa/nlu/choosing-a-pipeline/#choosing-a-pipeline).
 
 ## Train and test NLU
 
@@ -111,6 +115,8 @@ After loading (may take a moment) you can type in messages and see the predictio
 
 *Congratulations, you have complete 1/3 of the workshop, feel free to take a 3 mins break*
 
+Now we will train our chatbots how to respond to messages. This is called dialogue management, and is handled by Rasa Core.
+
 ## Planning the conversation
 
 In this part, we will write the plan for the flow of the conversation. It will be written in `data/stories.md`. The flow of the conversation will be broken into 3 parts:
@@ -133,9 +139,9 @@ In this part, we will write the plan for the flow of the conversation. It will b
 
    b) see you next year
 
-If you open and edit `data/stories.md`, you can see that there are example stories already written. Except the `## say goodbye` which we are going to keep (it is for the user to end the conversation at anytime), we can delete the rest of it and write our own.
+If you open and edit `data/stories.md`, you can see that there are example stories already written. The story `## say goodbye` enables the user to end the conversation at anytime. Keep `## say goodbye` and delete the rest of the file. We will write our own stories for the conversation flow outlined above.
 
-The skeleton of the above 3 parts should be like this:
+The skeleton for the 3 parts of our conversation flow looks like this:
 
 ```
 ## greetings
@@ -168,7 +174,7 @@ The skeleton of the above 3 parts should be like this:
 
 Here we will fill in `<something>` later but let me explain the use of checkpoints. For the line with `>` e.g. `> check ask experience` is a checkpoint which we can link the different part of the stories together. So instead giving example of stories which users answer the questions differently, we can use checkpoints to layout different paths.
 
-For the line with `*` it is when the chatbot recognize an intent. For example `* affirm` will be triggered when the NLU predicted an `affirm` intent.
+For the line with `*` it is when the chatbot recognises an intent. For example `* affirm` will be triggered when the NLU predicted an `affirm` intent.
 
 ## Domain and templates
 
@@ -355,7 +361,7 @@ Notice that `- form{"name": "experience_form"}` we are calling to use the action
 
 ## Form actions
 
-Now come to the fun part, we will use action forms to collect the user's information. Before we do anything, first we need to add the `FormPolicy` to the configuration, goto `config.yml` and add:
+Now come to the fun part, we will use action forms to collect the user's information. Before we do anything, first we need to add the `FormPolicy` to the configuration. Go to `config.yml` and add:
 
 ```
   - name: FormPolicy
