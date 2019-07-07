@@ -89,9 +89,9 @@ Here are some examples for the additional intents, please feel free to add more:
 - contact me at [07896234653](tel)
 ```
 
-We can see that these examples have a slightly different structure than before: each has a bracketed term that provides an example for the entity which follows in parentheses: `PERSON`, `email` and `tel`. `PERSON` is a entity provided by SpaCy.
+We can see that below the intents the examples have a slightly different structure than before. That is because each example contains an entity, which is a specific part of the text that needs to be identified. An entity has two terms and these function as a key-value pair: `[entity](entity name)`. Often we would like the named entity to map to more than one entity and thus we can give multiple examples for each entity name, as we do above. We now have three entities: `PERSON`, `email` and `tel`.
 
-To help capture `email` and `tel`, we will also use [regex](https://www.rexegg.com/). To do so, put this in `nlu.md` as well:
+`PERSON` is a entity provided by SpaCy. To help capture `email` and `tel`, we will also use [regex](https://www.rexegg.com/). To do so, put this in `nlu.md` as well:
 
 ```
 ## regex:email
@@ -186,17 +186,19 @@ The skeleton for the 3 parts of our conversation flow looks like this:
   <something>
 ```
 
-Here we will fill in `<something>` later but let me explain the use of checkpoints. For the line with `>` e.g. `> check ask experience` is a checkpoint which we can link the different part of the stories together. So instead giving example of stories which users answer the questions differently, we can use checkpoints to layout different paths.
+ We will fill in `<something>` later. The lines with `>`, e.g. `> check ask experience`, are a checkpoints which link the different parts of the stories together. So instead of creating multiple dialogue stories where users answer the questions differently, we can use checkpoints to map different paths.
 
-For the line with `*` it is when the chatbot recognises an intent. For example `* affirm` will be triggered when the NLU predicted an `affirm` intent.
+Line starting with `*` are for when our chatbot recognises an intent. For example, `* affirm` will trigger when the NLU predicts an `affirm` intent.
 
 ## Domain and templates
 
-We also need to tell the chatbot what action to take and what to answer then it reaches certain point of the conversation. This will be recorded in `domain.yml`, we also define the intents, entities and slots (information that we capture) in that file.
+We also need to tell the chatbot what action to take and what to answer when it reaches certain points in the conversation. To do this, we define a `Domain` for our chatbot, which is our chatbot's 'universe'. Your chatbot's domain specifies the `intents`, `entities`, `slots`, and `actions` your bot needs to know about. We will define these further below. The domain is recorded in `domain.yml`. If you open up `domain.yml`, you can see the `DefaultDomain`. You can delete the contents of that file and then we'll create a domain for our chatbot.
+
+The NLU model has defines the `intents`, and `entities` which need to be in the bots domain.
 
 #### Adding intents
 
-Remember what intents we have defined in `nlu.md`? Let's put it in `domain.yml`:
+Remember the intents we defined in `nlu.md`? Let's put them in `domain.yml`:
 
 ```
 intents:
@@ -209,9 +211,28 @@ intents:
 - give_tel
 ```
 
+#### Adding entities
+
+Similarly, add the entities that we defined in `nlu.md`:
+
+```
+entities:
+- PERSON
+- email
+- tel
+```
+
+We will also be adding `slots` and `actions` to our bot's domain. `Slots` store information that we want to keep track of in a conversation. `Actions` are things your bot can do, including:
+  respond to a user,
+  make an external API call,
+  query a database, or
+  just about anything!
+
+We'll also be adding optional additional information to our bot's domain, including `forms`and `templates`.
+
 #### Adding slots
 
-Before we define actions, we also want to define a few more stuff. Slots are the information that we wants to capture from the user. So far we want to capture their `name`, `email` and `tel` number:
+Slots enable us to store information about a conversation and the user having that conversation. For our chatbot, we would like to gather each user's `name`, `email` and `tel` number and user `feedback`:
 
 ```
 slots:
@@ -225,22 +246,12 @@ slots:
       type: unfeaturized
 ```
 
-`unfeaturized` just mean that this information will not affect the flow of the conversation.
+`unfeaturized` means that this information does not affect the flow of the conversation.
 
-#### Adding entities
-
-Similarly, add the entities that we defined in `nlu.md`:
-
-```
-entities:
-- PERSON
-- email
-- tel
-```
 
 #### Adding forms
 
-We will use action forms to capture user's contact information and feedback, it will be more clear when we write the actions for them. Let's define it here like this for now:
+To capture a user's contact information and feedback, we will use action forms. Let's define them like this for now:
 
 ```
 forms:
@@ -250,7 +261,9 @@ forms:
 
 #### Adding actions
 
-We have 2 kind of action: One is `utter` that you see in the example, those are the dialog that the chatbot will 'say' to the users. The other is custom action. In this part, we will only add `utter` actions.
+There are two main kinds of actions for our chatbot. The first are Utterance Actions, which send a message to a user and start with `utter_`. The second are Custom Actions, which run code you have written to enable your chatbot to perform specific custom actions.
+
+For now, we will define our `utter` actions.
 
 ```
 actions:
@@ -270,11 +283,13 @@ actions:
 - utter_encourage
 ```
 
-These are the different `utter` of dialogs we would have, you will see them come into places when we complete the other parts of the projects, you may come back to change it later if you want.
+These are the different utterances of dialog for our chatbot. You will see them come into place as we complete our chatbot. You may come back and change the `utter` actions later if you want.
 
 #### Adding templates
 
-For the above `utter` we need to fill in the templates of what text will be used. If there's more then one, it will be randomly choose to use one for that dialog. Try to put it more than one so there's variety in the bot's dialog.
+Now we will add Utterance Templates, which are the messages our chatbot will send to the user. We need to define the response text for each `utter` action listed in our domain. If we have more than one response text for an `utter` action, then one of them will be chosen at random for the chatbot's response. It's good design to have multiple responses so as to generate variety in your bot's dialogue.
+
+For the utterance templates, the utterance can be used directly as an action.
 
 ```
 templates:
@@ -324,9 +339,9 @@ templates:
 
 ```
 
-Please feel free to add more or change the text for each `utter`
+Please feel free to change the response texts and add more response texts for each `utter` action.
 
-We are done with `domain.yml` for now, let's go back to `stories.md`
+For now, we are done with `domain.yml`; let's go back to `stories.md`
 
 ## Finishing the stories
 
@@ -371,24 +386,31 @@ Now we know what's available in the `domain`, let's fill in the `<something>` in
 - utter_thanks
 ```
 
-Notice that `- form{"name": "experience_form"}` we are calling to use the action form `experience_form`. After we are done, it will be reset to `null` to continue the conversation.
+Notice that some of our actions start with `form`, these are the action forms that we defined in our domain. For example, `- form{"name": "experience_form"}` states to use the action form `experience_form`. After we are done, it will be reset to `null` to continue the conversation.
+
+Let's set up our action forms now.
 
 ## Form actions
 
-Now come to the fun part, we will use action forms to collect the user's information. Before we do anything, first we need to add the `FormPolicy` to the configuration. Go to `config.yml` and add:
+Now we come to the fun part! Our form actions are custom actions that we are using to collect the user's information. Before we do anything, first we need to add the `FormPolicy` to the configuration. Go to `config.yml` and under `policies` add:
 
 ```YAML
   - name: FormPolicy
 ```
-under `policies`. Also, we need to enable the aciton endpoint. Goto `endpoint.yml` and un0comment the following:
+
+When a custom action is predicted in our dialogue, Core will call an endpoint we specify in `endpoint.yml`. This endpoint should be a webserver that reacts to this call, runs the code for the custom action, and optionally returns information to modify the dialogue state.
+
+
+To enable the action endpoint, go to `endpoint.yml` and uncomment the following:
 
 ```YAML
  action_endpoint:
    url: "http://localhost:5055/webhook"
 ```
-The action scripts will be hosted in a server setup by Rasa at port 5055.
 
-Then let's have a look at `actions.py`. From the examples in the default file, there are:
+The custom action scripts we write will be hosted on a server setup by Rasa at port 5055.
+
+Open `actions.py`. From the default file, uncomment the following lines:
 
 ```python
 from typing import Any, Text, Dict, List
@@ -396,17 +418,18 @@ from typing import Any, Text, Dict, List
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 ```
-which imports some object that is used to communicated with the Rasa framework. On top of that, we also need:
+
+These import an object that is used to communicate with the Rasa framework. On top of that, we also need:
 
 ```python
 from rasa_sdk.forms import FormAction
 ```
 
-which allows us to write custom form action classes (classes inherit from `FormAction`).
+This additional import allows us to write custom form action classes which inherit from `FormAction`.
 
 #### ExperienceForm
 
-First we define the `experience_form`:
+Let's define the `experience_form`, adding it below our imports in `actions.py`:
 
 ```python
 class ExperienceForm(FormAction):
@@ -427,8 +450,8 @@ class ExperienceForm(FormAction):
     def submit(self, dispatcher, tracker, domain):
         # type: (CollectingDispatcher, Tracker, Dict[Text, Any]) -> List[Dict]
         """Define what the form has to do
-           after all required slots are filled
-           basically it generate sentiment analysis
+           after all required slots are filled.
+           Generates sentiment analysis
            using the user's feedback"""
         return []
 
@@ -443,7 +466,7 @@ class ExperienceForm(FormAction):
 
 ```
 
-It is very simple, it just collect the text that was input by the user in the `feedback` slot. When the form is triggered, the action `utter_ask_feedback` is activated and the user input after that will be captured. Have a look at the doc string of each methods and make sure you understand what each function does, we will use them again in the more complicated `contact_form`.
+This form will collect the text the user inputs in the `feedback` slot. When the form is triggered, the action `utter_ask_feedback` is activated and the user input after that will be captured. Have a look at the doc string of each methods and make sure you understand what each function does, we will use them again in the more complicated `contact_form`.
 
 #### ContactForm
 
@@ -489,7 +512,8 @@ class ContactForm(FormAction):
                         self.from_text()]}
 
 ```
-This time the slot mapping is more complicated, using `from_entity` we can specify the slot to be fill with a certain recognised entity / intent in stead of free text. However, we put `from_text` in the list after `from_entity` as a fail save catching the information if the user's input is not recognisable.
+
+This time the slot mapping is more complicated, using `from_entity` we can specify the slot to be fill with a certain recognised entity / intent instead of free text. However, we put `from_text` in the list after `from_entity` as a fail safe catching the information if the user's input is not recognisable.
 
 #### Validating slots
 
@@ -541,33 +565,42 @@ def validate_tel(
 ```
 
 Notice we have used `re` module, so we have to import it:
+
 ```python
 import re
 ```
+
 Also, we have use one more `typing`: `Optional`. We have to import it as well:
+
 ```python
 from typing import Any, Text, Dict, List, Optional
 ```
-Here we have defined 2 helper methods: `is_email` and `is_tel` which will use Regex to check if the input matches an email format and phone number format. After that , we also set up 2 validate method for each of them. If the format is not does not match what we expected, we will reset the slot to `None` and use the `utter` to ask again.
+
+Here we have defined 2 helper methods: `is_email` and `is_tel` which will use Regex to check if the input matches an email format and phone number format. We also have validate methods for each of them. If the format does not match what we expected, we will reset the slot to `None` and use an `utter` action to ask again.
 
 ## Train and test your Chatbots
 
-Once you are ready, it's time to train and test our chatbot (deep breath). So to train the bot using the settings that we have set up, in the terminal:
+Once you are ready, it's time to train and test our chatbot!!
+
+To train the bot using the settings that we have set up, in the terminal run:
 
 ```
 rasa train
 ```
 
-when it is done, you can see that a new model is saved. Now let's try it out. First, make the server hosting the action script up and running:
+When it is done, you can see that a new model is saved. Now let's try it out. First, make sure the server hosting the action script is up and running:
 
 ```
 rasa run actions
 ```
+
 Now the server is running, let's open an other terminal and then type:
+
 ```
 rasa shell --endpoint endpoint.yml
 ```
-It will call Rasa to run the chatbot with the endpoint and now you can talk to it.
+
+It will call Rasa to run the chatbot with the endpoint. Now you can talk to it!
 
 #### Restart the action server
 
@@ -587,7 +620,7 @@ fill in the `<PID>` with the  `PID` you found in step 1.
 
 ## Using NLTK to analyse the sentiment
 
-Here comes the fun part, we will use NLTK, a suite of libraries for natural language processing, to analyse the sentiment of the `feedback` so we know if it's a positive feedback or a negative one.
+Here comes the fun part!! We will use NLTK, a suite of libraries for natural language processing, to analyse the sentiment of the `feedback` so we know if the feedback is positive or negative.
 
 Before we add code in the action script, let's add 2 more slots in our `domain.yml`:
 
@@ -597,13 +630,16 @@ feedback_class:
 feedback_score:
   type: unfeaturized
 ```
+
 This 2 slots will store the result of the analysis. Then head to `actions.py`. First we have to import and download the resources in NLTK:
+
 ```python
 import nltk
 nltk.download('vader_lexicon')
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 ```
-This is a built in sentiment analyzer in NLTK and it's super easy to use. Then we add the following to the `submit` method of `ExperienceForm`:
+
+This is a built-in sentiment analyzer in NLTK and it's super easy to use. Then we add the following to the `submit` method of `ExperienceForm`:
 
 ```python
 sid = SentimentIntensityAnalyzer()
