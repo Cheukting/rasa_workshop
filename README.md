@@ -517,7 +517,7 @@ This time the slot mapping is more complicated, using `from_entity` we can speci
 
 #### Validating slots
 
-For the `email` and `tel` the user input, we want to validate them. so in the `ContactForm` class, we added more methods:
+For the `email` and `tel` the user input, we want to validate them. To do so, we add more methods to our `ContactForm` class:
 
 ```python
 @staticmethod
@@ -580,7 +580,7 @@ Here we have defined 2 helper methods: `is_email` and `is_tel` which will use Re
 
 ## Train and test your Chatbots
 
-Once you are ready, it's time to train and test our chatbot!!
+Now it's time to train and test our chatbot!! 🎉
 
 To train the bot using the settings that we have set up, in the terminal run:
 
@@ -599,8 +599,9 @@ Now the server is running, let's open an other terminal and then type:
 ```
 rasa shell --endpoint endpoint.yml
 ```
+(Note: you may need to activate the environment you created for the workshop.)
 
-It will call Rasa to run the chatbot with the endpoint. Now you can talk to it!
+The command above will call Rasa to run the chatbot with the endpoint. Now you can talk to it!
 
 #### Restart the action server
 
@@ -655,24 +656,30 @@ for slot, value in all_slots.items():
         # sentiment score of the feedback, range form -1 to 1
         all_slots[slot+'_score'] = score
 ```
+
 and return the new values of the slots:
+
 ```python
 return [SlotSet(slot, value) for slot, value in all_slots.items()]
 ```
-Here we use the analyzer to get the classification fo the feedback and the score of it and stall them in the new slots. Note that we have use a event in Rasa called `SlotSet`, make sure we import it at the beginning:
+Here we use the analyzer to get the classification for the feedback, and its score, and store them in the new slots. To do so, we have to use a event in Rasa called `SlotSet`; let's import it at the beginning:
+
 ```python
 from rasa_sdk.events import SlotSet
 ```
 
-Now you can restart the action server and test the chatbot again (remember to retrain it as we have change the `domain.yml`) Make sure the chatbot works as before. We cannot see the difference in the Rasa shell as the slots are not shown anywhere in the conversation. In the next part, we will generate a report using a simple web framework.
+Now you can restart the action server and test the chatbot again (remember to retrain it as we have changed the `domain.yml`). Make sure the chatbot works as before.
+
+We cannot see the difference in the Rasa shell as the slots are not shown anywhere in the conversation. In the next part, we will generate a report using a web framework.
 
 ## Generate user report
 
-To display the information that we collected from the user, we have to generate a report. You can use any web framework of your choice but here we use a simple lightweight framework called [CherryPy](https://docs.cherrypy.org/en/latest/index.html)
+To display the information that we collected from the user, we have to generate a report. You can use any web framework of your choice but we'll use a lightweight framework called [CherryPy](https://docs.cherrypy.org/en/latest/index.html).
 
 
-#### Set up CherryPy server
-Since we are not teaching web development here, we will just tell you how to set it up with CherryPy. First open a new directory and go there. In the terminal you can:
+#### Set up CherryPy server 🍒
+Since we are not teaching web development here, we will just tell you how to set it up with CherryPy. First open a new directory and go there. In the terminal:
+
 ```
 mkdir report
 cd report
@@ -715,17 +722,20 @@ conf={'/result.css':
 if __name__ == '__main__':
     cherrypy.quickstart(SurveyResult(), config=conf)
 ```
+
 Then in the terminal:
+
 ```
 python result.py
 ```
-It will set up a web app running at port 8080. Just like the action scrip server, we will leave it there and open a new terminal.
+It will set up a web app running at port 8080. Just like with the action script server, we will leave it running and open a new terminal.
 
 #### Action for showing report
 
 After setting up the report server, we have to add the `Action` in the action script to send the request when the conversation is ended, but before that, we will need to add `- action_show_result` under `actions` in `domain.yml` and at the end of the `## get contact info` and `## do not contact me` stories in `data/stories.md`.
 
 In `actions.py` add the following:
+
 ```python
 class ActionShowResult(Action):
     """open the html showing the result of the user survey"""
@@ -753,29 +763,36 @@ class ActionShowResult(Action):
 
         return []
 ```
-We have to also:
+
+We'll need to import `webbrowser`:
+
 ```python
 import webbrowser
 ```
-For this code it will call the method `run` when triggered and gather the slots and send them with the request to the report server.
 
-Now restart the action server and re-train and test the chatbot.
+This will gather the slots and send them with the request to the report server.
+
+Now restart the action server and re-train rasa and test the chatbot.
 
 ## Fallback dialog
 
-So far everything works fine if the user has been good. What if the user give an unexpected answer and the NLU failed to determine what to do. Here we use a fallback action to prompt the user to try again. First we have to enable `FallbackPolicy`, in `config.yml` under `policies`, add:
+So far everything should work fine if the user has been good. However, what if the user gives an unexpected answer and the NLU fails to determine what to do. Here we use a fallback action to prompt the user to try again. First we have to enable `FallbackPolicy`, in `config.yml` under `policies`, add:
+
 ```YAML
 - name: "FallbackPolicy"
   nlu_threshold: 0.4
   core_threshold: 0.3
   fallback_action_name: "action_default_fallback"
 ```
+
 `action_default_fallback` is a default action in Rasa Core which sends the `utter_default` template message to the user. So in `domain.yml`, add `- utter_default` under `actions` and `templates`:
+
 ```
 utter_default:
 - text: "Sorry, I don't understand."
 - text: "I am not sure what you mean."
 ```
+
 Now you can re-train and test the chatbot. Make sure you try to be a naughty user.
 
 *Congratulations! You have complicated the Rasa workshop... for now. Please feel free to integrate more functions to it, experiment and have fun.*
