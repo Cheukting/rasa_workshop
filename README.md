@@ -15,11 +15,25 @@ Enter the directory:
 
 `cd rasa_workshop`
 
-(optional) Create a new [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) or [pyenv](https://github.com/pyenv/pyenv-virtualenv) environment.
+Create a new [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) or [virtualenv](https://github.com/pyenv/pyenv-virtualenv) environment.
+
+`conda create --name rasa_workshop`
+
+or
+
+`pyenv virtualenv <version> rasa_workshop`
+
+where `<version>` is the python version (Rasa require python>=3.5)
+
+> Notes:
+> If virtualenv is too difficult to set up (e.g. using Windows), you can use [venv](https://docs.python.org/3/library/venv.html) instead
 
 Install the requirements:
 
 `pip install -r requirement.txt`
+
+> Notes:
+> If you are using conda and have problems with pip install, you may try installing individual packages using [conda-forge](https://conda-forge.org/docs/user/introduction.html)
 
 ## Create a new project
 
@@ -363,12 +377,12 @@ Notice that `- form{"name": "experience_form"}` we are calling to use the action
 
 Now come to the fun part, we will use action forms to collect the user's information. Before we do anything, first we need to add the `FormPolicy` to the configuration. Go to `config.yml` and add:
 
-```
+```YAML
   - name: FormPolicy
 ```
 under `policies`. Also, we need to enable the aciton endpoint. Goto `endpoint.yml` and un0comment the following:
 
-```
+```YAML
  action_endpoint:
    url: "http://localhost:5055/webhook"
 ```
@@ -376,7 +390,7 @@ The action scripts will be hosted in a server setup by Rasa at port 5055.
 
 Then let's have a look at `actions.py`. From the examples in the default file, there are:
 
-```
+```python
 from typing import Any, Text, Dict, List
 
 from rasa_sdk import Action, Tracker
@@ -384,7 +398,7 @@ from rasa_sdk.executor import CollectingDispatcher
 ```
 which imports some object that is used to communicated with the Rasa framework. On top of that, we also need:
 
-```
+```python
 from rasa_sdk.forms import FormAction
 ```
 
@@ -394,7 +408,7 @@ which allows us to write custom form action classes (classes inherit from `FormA
 
 First we define the `experience_form`:
 
-```
+```python
 class ExperienceForm(FormAction):
     """Form action to capture user experience"""
 
@@ -435,7 +449,7 @@ It is very simple, it just collect the text that was input by the user in the `f
 
 Similarly, we define `contact_form`:
 
-```
+```python
 class ContactForm(FormAction):
     """Form action to capture contact details"""
 
@@ -481,7 +495,7 @@ This time the slot mapping is more complicated, using `from_entity` we can speci
 
 For the `email` and `tel` the user input, we want to validate them. so in the `ContactForm` class, we added more methods:
 
-```
+```python
 @staticmethod
 def is_email(string: Text) -> bool:
     """Check if a string is valid email"""
@@ -527,11 +541,11 @@ def validate_tel(
 ```
 
 Notice we have used `re` module, so we have to import it:
-```
+```python
 import re
 ```
 Also, we have use one more `typing`: `Optional`. We have to import it as well:
-```
+```python
 from typing import Any, Text, Dict, List, Optional
 ```
 Here we have defined 2 helper methods: `is_email` and `is_tel` which will use Regex to check if the input matches an email format and phone number format. After that , we also set up 2 validate method for each of them. If the format is not does not match what we expected, we will reset the slot to `None` and use the `utter` to ask again.
@@ -577,21 +591,21 @@ Here comes the fun part, we will use NLTK, a suite of libraries for natural lang
 
 Before we add code in the action script, let's add 2 more slots in our `domain.yml`:
 
-```
+```YAML
 feedback_class:
   type: unfeaturized
 feedback_score:
   type: unfeaturized
 ```
 This 2 slots will store the result of the analysis. Then head to `actions.py`. First we have to import and download the resources in NLTK:
-```
+```python
 import nltk
 nltk.download('vader_lexicon')
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 ```
 This is a built in sentiment analyzer in NLTK and it's super easy to use. Then we add the following to the `submit` method of `ExperienceForm`:
 
-```
+```python
 sid = SentimentIntensityAnalyzer()
 
 all_slots = tracker.slots
@@ -606,11 +620,11 @@ for slot, value in all_slots.items():
         all_slots[slot+'_score'] = score
 ```
 and return the new values of the slots:
-```
+```python
 return [SlotSet(slot, value) for slot, value in all_slots.items()]
 ```
 Here we use the analyzer to get the classification fo the feedback and the score of it and stall them in the new slots. Note that we have use a event in Rasa called `SlotSet`, make sure we import it at the beginning:
-```
+```python
 from rasa_sdk.events import SlotSet
 ```
 
@@ -630,14 +644,14 @@ cd report
 create 3 files as follow:
 
 1. result.css
-```
+```css
 body {
     padding-left: 15px;
 }
 ```
 
 2. result.html
-```
+```html
 <html>
     <head>
     <link rel="stylesheet" href="result.css">
@@ -650,7 +664,7 @@ body {
 ```
 
 3. result.py
-```
+```python
 import cherrypy
 import os
 class SurveyResult(object):
@@ -676,7 +690,7 @@ It will set up a web app running at port 8080. Just like the action scrip server
 After setting up the report server, we have to add the `Action` in the action script to send the request when the conversation is ended, but before that, we will need to add `- action_show_result` under `actions` in `domain.yml` and at the end of the `## get contact info` and `## do not contact me` stories in `data/stories.md`.
 
 In `actions.py` add the following:
-```
+```python
 class ActionShowResult(Action):
     """open the html showing the result of the user survey"""
     def name(self):
@@ -704,7 +718,7 @@ class ActionShowResult(Action):
         return []
 ```
 We have to also:
-```
+```python
 import webbrowser
 ```
 For this code it will call the method `run` when triggered and gather the slots and send them with the request to the report server.
@@ -714,7 +728,7 @@ Now restart the action server and re-train and test the chatbot.
 ## Fallback dialog
 
 So far everything works fine if the user has been good. What if the user give an unexpected answer and the NLU failed to determine what to do. Here we use a fallback action to prompt the user to try again. First we have to enable `FallbackPolicy`, in `config.yml` under `policies`, add:
-```
+```YAML
 - name: "FallbackPolicy"
   nlu_threshold: 0.4
   core_threshold: 0.3
