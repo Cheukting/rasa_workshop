@@ -251,7 +251,7 @@ slots:
 
 #### Adding forms
 
-To capture a user's contact information and feedback, we will use action forms. Let's define them like this for now:
+To capture a user's contact information and feedback, we will use form actions. Let's define them like this for now:
 
 ```
 forms:
@@ -261,7 +261,7 @@ forms:
 
 #### Adding actions
 
-There are two main kinds of actions for our chatbot. The first are Utterance Actions, which send a message to a user and start with `utter_`. The second are Custom Actions, which run code you have written to enable your chatbot to perform specific custom actions.
+There are two main kinds of actions for our chatbot. The first are Utterance Actions, which send a message to a user and start with `utter_`. The second are Custom Actions, which run code you have written to enable your chatbot to perform specific custom actions. Our form actions are a type of custom action, and we will write the code for those actions further in the workshop.
 
 For now, we will define our `utter` actions.
 
@@ -386,9 +386,9 @@ Now we know what's available in the `domain`, let's fill in the `<something>` in
 - utter_thanks
 ```
 
-Notice that some of our actions start with `form`, these are the action forms that we defined in our domain. For example, `- form{"name": "experience_form"}` states to use the action form `experience_form`. After we are done, it will be reset to `null` to continue the conversation.
+Notice that some of our actions start with `form`, these are the form actions that we defined in our domain. For example, `- form{"name": "experience_form"}` states to use the action form `experience_form`. After we are done, it will be reset to `null` to continue the conversation.
 
-Let's set up our action forms now.
+Let's set up our form actions now.
 
 ## Form actions
 
