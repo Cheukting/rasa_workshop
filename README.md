@@ -621,7 +621,7 @@ fill in the `<PID>` with the  `PID` you found in step 1.
 
 ## Using NLTK to analyse the sentiment
 
-Here comes the fun part!! We will use NLTK, a suite of libraries for natural language processing, to analyse the sentiment of the `feedback` so we know if the feedback is positive or negative.
+Here comes the fun part!! We will use [Natural Language Toolkit (NLTK)](https://www.nltk.org/), a suite of libraries for natural language processing, to analyse the sentiment of the `feedback` so we know if the feedback is positive or negative.
 
 Before we add code in the action script, let's add 2 more slots in our `domain.yml`:
 
