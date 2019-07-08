@@ -70,7 +70,7 @@ class ExperienceForm(FormAction):
         sid = SentimentIntensityAnalyzer()
 
         all_slots = tracker.slots
-        for slot, value in all_slots.items():
+        for slot, value in all_slots.copy().items():
             if slot in self.required_slots(tracker):
                 res = sid.polarity_scores(value)
                 score = res.pop('compound', None)
