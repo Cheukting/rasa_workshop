@@ -17,18 +17,20 @@ Enter the directory:
 
 Create a new [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) or [virtualenv](https://github.com/pyenv/pyenv-virtualenv) environment.
 
-`conda create --name rasa_workshop`
+`conda create --name rasa_workshop python=x.x`
+where `x.x` is the python version (Rasa require python>=3.5)
 
 or
 
 `pyenv virtualenv <version> rasa_workshop`
-
 where `<version>` is the python version (Rasa require python>=3.5)
 
 > Notes:
 > If virtualenv is too difficult to set up (e.g. using Windows), you can use [venv](https://docs.python.org/3/library/venv.html) instead
 
-Install the requirements:
+Activate the environment by `conda activate rasa_workshop` or `pyenv activate rasa_workshop`
+
+While you are in the new environment, install the requirements:
 
 `pip install -r requirements.txt`
 
