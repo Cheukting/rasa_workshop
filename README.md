@@ -114,10 +114,9 @@ In `config.yml` change the `supervised_embeddings` to `pretrained_embeddings_spa
 The following 2 commands download and set up the Spacy model that we will be using. In the terminal:
 
 ```
-python -m spacy download en_core_web_md
+python -m spacy download en_core_web_md-2.0.0 --direct
 python -m spacy link en_core_web_md en
 ```
-
 Then we tell rasa to train the NLU.
 
 `rasa train nlu`
