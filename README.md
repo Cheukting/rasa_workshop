@@ -244,7 +244,7 @@ slots:
   tel:
     type: unfeaturized
   feedback:
-      type: unfeaturized
+    type: unfeaturized
 ```
 
 `unfeaturized` means that this information does not affect the flow of the conversation.
