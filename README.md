@@ -30,7 +30,7 @@ where `<version>` is the python version (Rasa require python>=3.5)
 
 Install the requirements:
 
-`pip install -r requirement.txt`
+`pip install -r requirements.txt`
 
 > Notes:
 > If you are using conda and have problems with pip install, you may try installing individual packages using [conda-forge](https://conda-forge.org/docs/user/introduction.html)
@@ -111,9 +111,10 @@ In `config.yml` change the `supervised_embeddings` to `pretrained_embeddings_spa
 
 The following 2 commands download and set up the Spacy model that we will be using. In the terminal:
 
-`python -m spacy download en_core_web_md`
-
-`python -m spacy link en_core_web_md en`
+```
+python -m spacy download en_core_web_md
+python -m spacy link en_core_web_md en
+```
 
 Then we tell rasa to train the NLU.
 
