@@ -723,6 +723,8 @@ if __name__ == '__main__':
     cherrypy.quickstart(SurveyResult(), config=conf)
 ```
 
+You may need to install cherrypy in your environment.
+
 Then in the terminal:
 
 ```
