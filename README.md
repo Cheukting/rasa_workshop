@@ -17,7 +17,11 @@ In this workshop, we will build a chatbot that will ask for an individual's cont
   * [Domain and templates](#domain-and-templates)
   * [Finishing the stories](#finishing-the-stories)
   * [Form actions](#form-actions)
+<<<<<<< HEAD
   * [Train and test your Chatbots](#train-and-test-your-chatbots)
+=======
+  * [Train and test your Chatbots](#train-and-test-your-Chatbots)
+>>>>>>> 9186df41082f4672cac90ce1ae5aabaef577173a
 * **Part 3**
   * [Using NLTK to analyse the sentiment](#using-nltk-to-analyse-the-sentiment)
   * [Generate user report](#generate-user-report)
