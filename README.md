@@ -1,6 +1,6 @@
 # Step Into the AI Era: Chatbots that know if you are angry
 
-In this workshop, we will build a chatbot that will ask for an individual's contact details (compliant to GDPR) and for feedback for an event that they may have attended.
+In this workshop, we will be using [Rasa](https://rasa.com/), an open source machine learning framework, to build a chatbot that will ask for an individual's contact details (compliant to GDPR) and for feedback for an event that they may have attended. Feedback will then be analyse for sentiment and reported in a basic web app.
 
 
 ## Install Rasa and set up the environment
