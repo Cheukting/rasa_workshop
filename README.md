@@ -29,6 +29,16 @@ In this workshop, we will be using [Rasa](https://rasa.com/), an open source mac
 
 ## Install Rasa and set up the environment
 
+### Install python
+
+This workshop uses Python >= 3.6. Make sure you have Python >= 3.6 available on your machine. You are recommended to use environment controls (conda or virtualenv) described below.
+
+If you are using Mac or Linux, the best way to manage multiple Python environments is to use [pyenv](https://github.com/pyenv/pyenv). If you don't have Python installed, you can skip installing Python directly on your machine. Instead, [install pyenv](https://github.com/pyenv/pyenv#installation) and [pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv) for creating different virtualenv environments with different versions of Pythons.
+
+Another way to have Python on your machine (either Windows, Mac or Linux) is to download [Anaconda](https://www.anaconda.com/distribution/) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html), you will then create conda enviroments in the following step.
+
+### Create new environment
+
 Open a terminal.
 
 Clone this repo from Github:
@@ -50,7 +60,7 @@ or
 where `<version>` is the python version (Rasa require python>=3.5)
 
 > Notes:
-> If virtualenv is too difficult to set up (e.g. using Windows), you can use [venv](https://docs.python.org/3/library/venv.html) instead
+> If virtualenv is too difficult to set up (e.g. using Windows) and already have Python >= 3.6 installed, you can use [venv](https://docs.python.org/3/library/venv.html) instead
 
 Activate the environment by `conda activate rasa_workshop` or `pyenv activate rasa_workshop`
 
