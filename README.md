@@ -2,6 +2,30 @@
 
 In this workshop, we will be using [Rasa](https://rasa.com/), an open source machine learning framework, to build a chatbot that will ask for an individual's contact details (compliant to GDPR) and for feedback for an event that they may have attended. Feedback will then be analyse for sentiment and reported in a basic web app.
 
+----
+
+
+## Table of Contents
+
+* **Part 1**
+  * [Install Rasa and set up the environment](#install-rasa-and-set-up-the-environment)
+  * [Create a new project](#create-a-new-project)
+  * [NLU and Pipeline setup](#nlu-and-pipeline-setup)
+  * [Train and test NLU](#train-and-test-nlu)
+* **Part 2**
+  * [Planning the conversation](#planning-the-conversation)
+  * [Domain and templates](#domain-and-templates)
+  * [Finishing the stories](#finishing-the-stories)
+  * [Form actions](#form-actions)
+  * [Train and test your Chatbots](#train-and-test-your-chatbots)
+* **Part 3**
+  * [Using NLTK to analyse the sentiment](#using-nltk-to-analyse-the-sentiment)
+  * [Generate user report](#generate-user-report)
+  * [Fallback dialog](#fallback-dialog)
+  * [What's beyond](#whats-beyond)
+
+
+----
 
 ## Install Rasa and set up the environment
 
