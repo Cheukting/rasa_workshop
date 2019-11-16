@@ -157,7 +157,10 @@ Then we tell rasa to train the NLU.
 
 The trained model should be saved under `models/`.
 
- Now we can test the NLU model that we trained:
+> Notes:
+> You can ignore all the future warnings for now as we will only use the current version in the workshop.
+
+Now we can test the NLU model that we trained:
 
 `rasa shell nlu`
 
